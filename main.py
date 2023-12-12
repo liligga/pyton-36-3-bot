@@ -1,36 +1,14 @@
 import asyncio
-from aiogram import Bot, Dispatcher, types
-from dotenv import load_dotenv
-from os import getenv
+from aiogram import types
 from aiogram.filters import Command
 import logging
-
-
-load_dotenv()
-bot = Bot(token=getenv('BOT_TOKEN'))
-dp = Dispatcher()
-
-
-
-@dp.message(Command("pic"))
-async def send_pic(message: types.Message):
-    file = types.FSInputFile("images/cat.jpg")
-    await message.answer_photo(
-        photo=file,
-        caption="Котик"
-    )
-
-@dp.message(Command("start"))
-async def start(message: types.Message):
-    await message.answer(f"Привет, {message.from_user.full_name}")
-
-@dp.message()
-async def echo(message: types.Message):
-    # обрабатываем все сообщения
-    # await message.answer(f"{message.text}, {message.from_user.first_name}, {message.from_user.username}")
-    await message.reply(
-        f"{message.text}, {message.from_user.first_name}, {message.from_user.username}"
-    )
+from bot import bot, dp
+from handlers import (
+    start_router,
+    pic_router,
+    courses_router,
+    echo_router
+)
 
 
 async def main():
@@ -38,7 +16,13 @@ async def main():
         types.BotCommand(command="start", description="Начало"),
         types.BotCommand(command="pic", description="Получить картинку")
     ])
+    
+    dp.include_router(start_router)
+    dp.include_router(pic_router)
+    dp.include_router(courses_router)
 
+    # echo в самом конце
+    dp.include_router(echo_router)
     # запускаем бота
     await dp.start_polling(bot)
 

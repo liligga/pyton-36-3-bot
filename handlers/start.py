@@ -14,6 +14,7 @@ async def start(message: types.Message):
             ],
             [
                 types.InlineKeyboardButton(text="О нас", callback_data="about"),
+                types.InlineKeyboardButton(text="Каталог товаров", callback_data="catalog"),
             ]
         ]
     )
@@ -29,3 +30,8 @@ async def about_us(callback: types.CallbackQuery):
     await callback.answer()
     
     await callback.message.answer("О нас")
+
+
+@start_router.callback_query(F.data == "catalog")
+async def catalog(callback: types.CallbackQuery):
+    pass

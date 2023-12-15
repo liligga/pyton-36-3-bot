@@ -22,8 +22,8 @@ async def main():
     
     dp.include_router(start_router)
     dp.include_router(pic_router)
-    dp.include_router(courses_router)
     dp.include_router(free_lesson_form_router)
+    dp.include_router(courses_router)
 
     # echo в самом конце
     dp.include_router(echo_router)

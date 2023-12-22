@@ -10,6 +10,14 @@ from handlers import (
     echo_router,
     free_lesson_form_router
 )
+from db.queries import init_db, create_tables, populate_tables
+
+
+async def on_startup(dispatcher):
+    print('Бот вышел в онлайн')
+    init_db()
+    create_tables()
+    populate_tables()
 
 
 async def main():
@@ -27,6 +35,8 @@ async def main():
 
     # echo в самом конце
     dp.include_router(echo_router)
+
+    dp.startup.register(on_startup)
     # запускаем бота
     await dp.start_polling(bot)
 

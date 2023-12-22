@@ -17,10 +17,12 @@ class Form(StatesGroup):
     napravlenie = State()
     phone = State()
 
+
 @free_lesson_form_router.message(Command("free_lesson"))
 async def start(message: types.Message, state: FSMContext):
     await state.set_state(Form.name)
     await message.answer("Как Вас зовут?")
+
 
 @free_lesson_form_router.message(Command("stop"))
 @free_lesson_form_router.message(F.text == "stop")
@@ -40,6 +42,7 @@ async def process_name(message: types.Message, state: FSMContext):
 
         await state.set_state(Form.age)
         await message.answer("Сколько Вам лет?")
+
 
 @free_lesson_form_router.message(Form.age)
 async def process_age(message: types.Message, state: FSMContext):

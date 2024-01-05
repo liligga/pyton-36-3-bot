@@ -34,6 +34,16 @@ def create_tables():
             FOREIGN KEY (course_id) REFERENCES courses(id)
         )
     """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS lesson_participants(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            age INTEGER,
+            course TEXT,
+            phone TEXT,
+            telegram_id INTEGER
+        )
+    """)
     db.commit()
 
 def populate_tables():
@@ -89,6 +99,19 @@ def get_teachers_by_course_name(name: str):
 def get_course_by_name(name: str):
     cursor.execute("SELECT * FROM courses WHERE name LIKE ?", (name,))
     return cursor.fetchone()
+
+def save_free_lesson_participant(data, telegram_id):
+    cursor.execute("""
+        INSERT INTO lesson_participants (name, age, course, phone, telegram_id) VALUES
+        (:aaaa, :bbbb, :course, :phone, :telegram_id)
+    """, {
+        "aaaa": data["name"],
+        "bbbb": data["age"],
+        "course": data["napravlenie"],
+        "phone": data["phone"],
+        "telegram_id": telegram_id
+    })
+    db.commit()
 
 if __name__ == "__main__":
     init_db()

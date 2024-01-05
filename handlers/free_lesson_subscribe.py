@@ -5,6 +5,7 @@ from aiogram.fsm.context import FSMContext
 from pprint import pprint
 
 from keyboards.napravlenie import napravleniya_keyboard
+from db.queries import save_free_lesson_participant
 
 
 # FSM = Finite state machine
@@ -18,11 +19,18 @@ class Form(StatesGroup):
     phone = State()
 
 
-@free_lesson_form_router.message(Command("free_lesson"))
-async def start(message: types.Message, state: FSMContext):
-    await state.set_state(Form.name)
-    await message.answer("Как Вас зовут?")
+# @free_lesson_form_router.message(Command("free_lesson"))
+# async def start(message: types.Message, state: FSMContext):
+#     await state.set_state(Form.name)
+#     await message.answer("Как Вас зовут?")
 
+@free_lesson_form_router.callback_query(F.data.startswith("free_lesson:"))
+async def free_lesson(callback: types.CallbackQuery, state: FSMContext):
+    # "free_lesson:1"
+    course_id = int(callback.data.split(":")[1])
+    # await callback.message.answer("Спасибо. ID курса " + str(course_id))
+    await state.set_state(Form.name)
+    await callback.message.answer("Как Вас зовут?")
 
 @free_lesson_form_router.message(Command("stop"))
 @free_lesson_form_router.message(F.text == "stop")
@@ -73,5 +81,5 @@ async def process_phone(message: types.Message, state: FSMContext):
     data = await state.get_data()
     pprint(data)
     await message.answer(f"Спасибо!")
-    # save data to DB
+    save_free_lesson_participant(data, message.from_user.id)
     await state.clear()

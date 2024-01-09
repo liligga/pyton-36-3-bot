@@ -9,7 +9,8 @@ from handlers import (
     courses_router,
     echo_router,
     free_lesson_form_router,
-    delayed_answer_router
+    delayed_answer_router,
+    group_admin_router
 )
 from db.queries import init_db, create_tables, populate_tables
 
@@ -34,6 +35,7 @@ async def main():
     dp.include_router(free_lesson_form_router)
     dp.include_router(courses_router)
     dp.include_router(delayed_answer_router)
+    dp.include_router(group_admin_router)
 
     # echo в самом конце
     dp.include_router(echo_router)

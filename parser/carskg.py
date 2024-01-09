@@ -30,6 +30,8 @@ class CarsKgScraper:
         cars = selector.css('.catalog-list-item')
         all_cars = []
         for car in cars:
+            # house.css(".title a::text").get()
+            # house.css(".title::text").getall()[1].strip()
             title = car.css(".catalog-item-caption::text").get().strip()
             mileage = car.css(".catalog-item-mileage::text").get()
             if mileage is not None:
